@@ -77,7 +77,9 @@ $args = array(
   $i=0;//var_dump($users);
   foreach ( $users as $user )
   {
-echo $user->user_email . ' : ' . $user->first_name . '<br />';
+echo $user->user_email . ' : ' . $user->first_name . '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Edit
+</button><br />';
     /*$DBRecord[$i]['role']           = "Subscriber";
     $DBRecord[$i]['WPId']           = $user->ID;
     $DBRecord[$i]['FirstName']      = $user->first_name;

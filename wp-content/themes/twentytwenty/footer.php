@@ -12,6 +12,7 @@
  */
 
 ?>
+
 			<footer id="site-footer" class="header-footer-group">
 
 				<div class="section-inner">
@@ -60,8 +61,87 @@
 				</div><!-- .section-inner -->
 
 			</footer><!-- #site-footer -->
+			<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <form method="POST" class="mform">
+    	
+    	<div id="form-area"></div>
+    
+    <button type="button" value="" id="submit" onclick="submit_form()">Submit</button>
+    </form>
+    
+  </div>
 
+</div>
+<script>
+
+
+ 
+
+</script>
 		<?php wp_footer(); ?>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>		
+<script>
+// Get the modal
+function modal_mform(e){
+var modal = document.getElementById("myModal");
+modal.style.display = "block";
 
+var ID=e;	
+$.ajax({
+      type: 'POST',
+      url: '<?php echo admin_url('admin-ajax.php');?>',
+      data: { action : 'wpget_user' , ID:ID },
+      success: function( response ) {
+          $( '#form-area' ).html( response ); 
+      }
+  });   
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+}
+var modal = document.getElementById("myModal");
+var span = document.getElementsByClassName("close")[0];
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+
+
+ function submit_form()  {
+ 	var ID =$("#post_id").val();
+ 	var first_name =$("#first_name").val();
+ 	var last_name =$("#last_name").val();
+
+    $.ajax({
+      type: "POST",
+      url: "<?php echo admin_url('admin-ajax.php');?>",
+      data: { action : 'wpttuts_updateuser' , ID:ID,first_name:first_name,last_name:last_name },
+    }).done(function (data) {
+      console.log(data);
+      get_all_user();
+    });
+
+    
+  }
+
+ function get_all_user()  {
+    $.ajax({
+      type: "POST",
+      url: "<?php echo admin_url('admin-ajax.php');?>",
+      data: { action : 'get_all_user'},
+    }).done(function (data) {
+    	modal.style.display = "none";
+       $( '#all_user' ).html( data ); 
+    });
+
+    
+  }
+
+</script>
 	</body>
 </html>

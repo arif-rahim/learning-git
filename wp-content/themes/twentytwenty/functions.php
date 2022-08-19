@@ -33,6 +33,76 @@
  *
  * @since Twenty Twenty 1.0
  */
+add_action( 'wp_ajax_get_all_user', 'get_all_user' );
+function get_all_user()
+	{
+$args = array(
+      'orderby' => 'ID',
+      'order'   => 'ASC'
+  );
+  $users = get_users($args  );
+  $i=0;
+  $result='';
+  $result .='<table id="all_user">';
+  foreach ( $users as $user )
+  {
+$result .= '<tr><td>'.$user->user_email . ' </td><td> ' . $user->first_name . '</td><td> ' . $user->last_name . '</td><td><button id="myBtn" value="'.$user->ID.'" onclick="modal_mform('.$user->ID.')">Edit</button></td>';
+    /*$DBRecord[$i]['role']           = "Subscriber";
+    $DBRecord[$i]['WPId']           = $user->ID;
+    $DBRecord[$i]['FirstName']      = $user->first_name;
+    $DBRecord[$i]['LastName']       = $user->last_name;
+    $DBRecord[$i]['RegisteredDate'] = $user->user_registered;
+    $DBRecord[$i]['Email']          = $user->user_email;
+
+    $UserData                       = get_user_meta( $user->ID );
+    $DBRecord[$i]['Company']        = $UserData['billing_company'][0];
+    $DBRecord[$i]['Address']        = $UserData['billing_address_1'][0];
+    $DBRecord[$i]['City']           = $UserData['billing_city'][0];
+    $DBRecord[$i]['State']          = $UserData['billing_state'][0];
+    $DBRecord[$i]['PostCode']       = $UserData['billing_postcode'][0];
+    $DBRecord[$i]['Country']        = $UserData['billing_country'][0];
+    $DBRecord[$i]['Phone']          = $UserData['billing_phone'][0];*/
+   $result .= '</tr>';
+    $i++;
+  }
+  $result .='</table>';
+  echo $result;
+  	}
+  
+ 
+ add_shortcode('get_mall_user', 'get_all_user');
+
+add_action( 'wp_ajax_wpget_user', 'wpget_user' );
+function wpget_user()
+	{
+		$ID=$_POST['ID'];
+$args = array(
+      'ID' => $ID
+  );
+  $user = get_userdata($ID);
+  
+  echo  '<input type="hidden" name="id" value="'.$user->ID.'" id="post_id">
+  <label>First Name</label> <input type="text" name="first_name" value="' . $user->first_name . '" id="first_name">
+    <label>Last Name</label> <input type="text" name="last_name" value="' . $user->last_name . '" id="last_name">';
+  	}
+ 
+add_action( 'wp_ajax_wpttuts_updateuser', 'wpttuts_updateuser' );
+function wpttuts_updateuser() {
+ 
+    $user_data = array (
+        'ID' => $_POST['ID'],
+        'first_name' => $_POST['first_name'],
+        'last_name' => $_POST['last_name'],
+    );
+    $user_id = wp_update_user( $user_data );
+    if ( is_wp_error( $user_id ) ) {
+        $user_id->get_error_message();
+    }
+    else {
+    	echo "OK";
+    }
+}
+
 function twentytwenty_theme_support() {
 
 	// Add default posts and comments RSS feed links to head.
